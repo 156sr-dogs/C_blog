@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章 - 1.如何构建专业的阅读量统计系统（本博客为测试博客，请忽略！）</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+        }
+
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        /* 新增返回按钮样式 */
+        .back-button {
+            display: inline-block;
+            background: var(--primary-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 24px;
+            text-decoration: none;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .back-button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            font-size: 2.5em;
+        }
+
+        .article-info {
+            color: #666;
+            margin-bottom: 25px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .view-count {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #f0f2f5;
+            font-size: 0.9em;
+            color: var(--secondary-color);
+            transition: all 0.3s ease;
+        }
+
+        .view-count:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 10px rgba(52,152,219,0.2);
+        }
+
+        .content {
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 10px;
+            border-left: 4px solid var(--secondary-color);
+            margin: 15px 0;
+        }
+
+        .footer {
+            text-align: center;
+            color: #666;
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+            padding-top: 20px;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+
+            .back-button {
+                display: block;
+                width: 100%;
+                text-align: center;
+                padding: 12px;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 新增返回按钮 -->
+        <a href="javascript:history.back()" class="back-button" aria-label="返回上一页">
+            ← 返回
+        </a>
+        
+        <h1>如何构建专业的阅读量统计系统</h1>
+        <div class="article-info">
+            <span>作者：技术探索者</span>
+            <span>2025-03-27</span>
+            <span class="view-count" id="viewCount">加载中...</span>
+        </div>
+
+        <div class="content">
+            <p class="highlight">阅读量统计是现代内容平台的重要指标，需要兼顾准确性和用户体验。以下是关键实现要点：</p>
+            
+            <h2>核心方案选择</h2>
+            <ul>
+                <li>服务端统计（推荐）：通过数据库记录IP/用户ID去重</li>
+                <li>云函数方案：适合无服务器架构，结合缓存数据库</li>
+                <li>第三方工具：快速集成但存在数据隐私风险</li>
+            </ul>
+
+            <h2>安全增强措施</h2>
+            <ol>
+                <li>IP频率限制（每24小时1次计数）</li>
+                <li>用户行为验证（鼠标移动/页面停留时间）</li>
+                <li>请求签名加密（防止恶意刷量）</li>
+            </ol>
+
+            <h3>性能优化技巧</h3>
+            <div class="highlight">
+                异步加载统计代码 + CDN缓存 + 数据库分片存储
+            </div>
+        </div>
+        <!DOCTYPE html>
+        <html lang="zh-CN">
+        <head>
+            <meta charset="UTF-8">
+            <title>点赞按钮（带本地存储）</title>
+            <style>
+                /* 保持原有样式不变 */
+                .like-button {
+                    display: inline-flex;
+                    align-items: center;
+                    padding: 8px 16px;
+                    border: none;
+                    background: #f0f2f5;
+                    border-radius: 24px;
+                    cursor: pointer;
+                    transition: transform 0.1s;
+                    gap: 8px;
+                }
+        
+                .like-button:hover {
+                    background: #e0e5ec;
+                    transform: scale(1.02);
+                }
+        
+                .like-icon {
+                    font-size: 20px;
+                    transition: color 0.3s;
+                }
+        
+                .like-count {
+                    font-size: 14px;
+                    color: #64748b;
+                }
+        
+                .活跃状态 {
+                    color: #e53935 !important;
+                }
+            </style>
+        </head>
+        <body>
+            <button class="like-button" onclick="toggleLike()">
+                <span class="like-icon" aria-hidden="true">👍</span>
+                <span class="like-count">0</span>
+            </button>
+        
+            <script>
+                // 初始化时从localStorage读取状态
+                let isliked = JSON.parse(localStorage.getItem('isliked')) || false;
+                let likeCount = JSON.parse(localStorage.getItem('likeCount')) || 0;
+        
+                function toggleLike() {
+                    const button = document.querySelector('.like-button');
+                    const icon = document.querySelector('.like-icon');
+                    const count = document.querySelector('.like-count');
+        
+                    isliked = !isliked;
+                    
+                    if (isliked) {
+                        icon.textContent = '👍';
+                        icon.classList.add('活跃状态');
+                        likeCount++;
+                    } else {
+                        icon.textContent = '👉';
+                        icon.classList.remove('活跃状态');
+                        likeCount--;
+                    }
+        
+                    // 更新DOM显示
+                    count.textContent = likeCount;
+        
+                    // 保存到localStorage
+                    localStorage.setItem('isliked', JSON.stringify(isliked));
+                    localStorage.setItem('likeCount', JSON.stringify(likeCount));
+        
+                    // 添加点击动画效果
+                    button.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        button.style.transform = '';
+                    }, 100);
+                }
+        
+                // 页面加载时恢复状态
+                window.addEventListener('DOMContentLoaded', () => {
+                    const icon = document.querySelector('.like-icon');
+                    const count = document.querySelector('.like-count');
+                    
+                    if (isliked) {
+                        icon.textContent = '👍';
+                        icon.classList.add('活跃状态');
+                    }
+                    count.textContent = likeCount;
+                });
+            </script>
+        </body>
+        </html>
+<div id="itemPageComments" class="s123-comments-container"><div class="row"><div class="col-md-offset-2 col-md-8"><span style="margin-bottom:15px;">Comments</span></div></div><div class="row"><div class="col-md-offset-2 col-md-8"><form class="commentsForm" novalidate="novalidate"><div class="blogCommentsBox box-primary s123-box-padding s123-box-border"><div class="form-group"><textarea class="form-control" id="comment_message" name="comment_message" placeholder="Write a response here..." style="min-height: 100px;" required="" data-msg-required="This field is required."></textarea></div><div class="extraDetails"><div class="row"><div class="col-xs-6"><div class="form-group"><input type="text" id="contact_name" name="contact_name" placeholder="Name" class="form-control" required="" data-msg-required="This field is required."></div></div><div class="col-xs-6"><div class="form-group"><input type="text" id="contact_email" name="contact_email" placeholder="Email address" class="form-control" required="" data-msg-required="This field is required." data-rule-email="true" data-msg-email="Please enter a valid email."></div></div></div><div class="text-center"><button type="submit" class="btn btn-primary blogSubmitButton" data-text="Post Comment">Post Comment</button></div><div class="text-center comments-message-text"><small>* The email will not be published on the website.</small></div></div></div><input type="hidden" name="w" value=""><input type="hidden" name="websiteID" value="10325113"><input type="hidden" name="moduleID" value="67a95f3ade01d"><input type="hidden" name="moduleTypeNUM" value="52"><input type="hidden" name="tranW" value=""><input type="hidden" name="uniquePageID" value="67a9659cc1f93"><input type="hidden" class="commentTo" name="commentTo" value="-1"><input type="hidden" name="act" value="addShow"><input type="hidden" name="recaptchaToken" value=""></form></div></div><div class="row"><div class="col-md-offset-2 col-md-8"><div id="commentsContainer" style="width:100%;margin:0;padding:0;border:none;" data-module-id="67a95f3ade01d" data-module-type-num="52" data-unique-page-id="67a9659cc1f93" data-tran-w="" data-action="show">    <div>
+        <div class="sub-comment-container">
+            <div class="s123-comments-wrap">                   
+                                    <div>No comments yet, be the first to comment.</div>
+                            </div>
+        </div>
+    </div>
+</div></div></div></div>
+<h2>（点赞、评论功能暂时内测，可能有bug！）<h2>
+        <div class="footer">
+            <div id="realTimeCount"></div>
+            <p>数据统计：文章管理系统 &copy; 2025</p>
+        </div>
+    </div>
+    <footer style="text-align: center; padding: 1rem; background: #333; color: white; margin-top: 2rem;">
+        <p>&copy; 2025-2037 Creeper苦力怕i的个人博客. 保留所有权利。</p>
+    </footer>
+    
+
+    <script>
+        // 模拟后端接口响应
+        const mockData = {
+            views: 1528,
+            realTimeViews: 1528
+        };
+
+        // 初始化阅读量
+        function initCounters() {
+            document.getElementById('viewCount').textContent = `阅读量  $ {mockData\views}次`;
+            
+            // 模拟实时更新
+            const realTimeElement = document.getElementById('realTimeCount');
+            let currentCount = mockData realTimeViews;
+            
+            setInterval(() => {
+                currentCount++;
+                realTimeElement.textContent = `实时阅读量： $ {currentCount}次`;
+            }, 60000); // 每分钟更新
+        }
+
+        // 模拟防刷验证
+        async function trackView() {
+            try {
+                // 此处应调用真实接口
+                const response = await fetch('/api/article-views');
+                const data = await respons
+                e.json();
+                
+                // 更新本地显示
+                document.getElementById('viewCount').textContent = `阅读量  $ {data_views}次`;
+            } catch (error) {
+                console.error('统计失败:', error);
+            }
+        }
+
+        // 页面加载时初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            initCounters();
+            trackView(); // 初始计数
+        });
+
+        // 添加交互效果
+        document.querySelector('.view-count').addEventListener('click', () => {
+            alert('当前阅读量统计已通过服务端加密验证');
+        });
+    </script>
+</body>
+</html>

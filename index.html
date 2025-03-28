@@ -1,0 +1,168 @@
+ <!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Creeper苦力怕i的个人博客</title>
+    <style>
+        /* 基础样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* 导航栏样式 */
+        .nav {
+            background-color: #333;
+            padding: 1rem;
+        }
+
+        .nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+        }
+
+        .nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            transition: color 0.3s;
+        }
+
+        .nav a:hover {
+            color: #4CAF50;
+        }
+
+        /* 主要内容区域 */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* 博主信息卡片 */
+        .about-me {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .about-me img {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin-bottom: 1rem;
+        }
+
+        /* 文章列表 */
+        .article-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .article-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            transition: transform 0.2s;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .article-title {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .article-meta {
+            color: #95a5a6;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .nav ul {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="nav">
+        <ul>
+            <li><a href="#home">首页</a></li>
+            <li><a href="#about">关于我</a></li>
+            <li><a href="#posts">文章列表</a></li>
+            <li><a href="#contact">联系我</a></li>
+	    <li><a href="G:\自制程序\个人博客\文件下载器.html">文件管理</a></li>
+        </ul>
+    </nav>
+<h1>欢迎来到Creeper苦力怕i的博客！<h1>
+<h3>要添加博客请联系管理员！<h3>
+    <div class="container">
+        <!-- 博主信息 -->
+        <section class="about-me">
+            <img src="avatar.jpg" alt="博主头像">
+            <h2>Creeper苦力怕i的博客</h2>
+            <p>bilibili游戏区、科技区自媒体，爱玩游戏、编程</p>
+            <div class="social media">
+                <a href="https://github.com/156sr-dogs/C_tools-156">GitHub</a> | 
+                <a href="https://space.bilibili.com/3546378363996834?spm_id_from=333.999.0.0">bilibili</a> | 
+                <a href="https://www.youtube.com/@dogs-ww8pj">YouTube</a> |
+                <a href="C:\Users\20419\Desktop\个人博客\QQ.html">QQ（点击后注意地址栏！）</a>
+            </div>
+        </section>
+
+        <!-- 文章列表 -->
+        <section class="article-list" id="posts">
+            <article class="article-card">
+                <h3 class="article-title">
+                    <a href="article1.html">如何构建专业的阅读量统计系统（本博客为测试博客，请忽略！）</a>
+                </h3>
+                <div class="article-meta">
+                    <span>2025-03-25</span> | 
+                    <span>5分钟阅读</span>
+                </div>
+                <p>无</p>
+                <a href="article1.html" class="read-more">阅读全文</a>
+            </article>
+
+            <article class="article-card">
+                <h3 class="article-title">
+                    <a href="article2.html">欢迎！</a>
+                </h3>
+                <div class="article-meta">
+                    <span>2025-03-20</span> | 
+                    <span>0.5分钟阅读</span>
+                </div>
+                <p>无</p>
+                <a href="article2.html" class="read-more">阅读全文</a>
+            </article>
+        </section>
+    </div>
+
+    <!-- 页脚 -->
+    <footer style="text-align: center; padding: 1rem; background: #333; color: white; margin-top: 2rem;">
+        <p>&copy; 2025-2037 Creeper苦力怕i的个人博客. 保留所有权利。</p>
+    </footer>
+</body>
+</html>

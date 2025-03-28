@@ -1,0 +1,10 @@
+<button onclick="toggleLike()">点赞（0）</button>
+<script>
+let count = 0;
+
+async function toggleLike() {
+    const response = await fetch('/like');
+    const data = await response.json();
+    document.querySelector('button').textContent = `点赞（ $ {data.count}）`;
+}
+</script>
