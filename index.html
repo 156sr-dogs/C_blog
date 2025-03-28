@@ -113,7 +113,7 @@
             <li><a href="#about">关于我</a></li>
             <li><a href="#posts">文章列表</a></li>
             <li><a href="#contact">联系我</a></li>
-	    <li><a href="https://156sr-dogs.github.io/C_blog/File.html">文件管理</a></li>
+	    <li><a href="G:\自制程序\个人博客\文件下载器.html">文件管理</a></li>
         </ul>
     </nav>
 <h1>欢迎来到Creeper苦力怕i的博客！<h1>
@@ -172,10 +172,186 @@
             </article>
         </section>
     </div>
-
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <title>反馈按钮示例</title>
+        <style>
+            /* 反馈按钮样式 */
+            .feedback-button {
+                position: fixed;
+                right: 20px;
+                bottom: 20px;
+                z-index: 1000;
+                background-color: #4CAF50;
+                color: white;
+                border: none;
+                padding: 15px 30px;
+                border-radius: 50%;
+                cursor: pointer;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+                transition: all 0.3s ease;
+                font-size: 18px;
+                width: 60px;
+                height: 60px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+            }
+    
+            .feedback-button:hover {
+                background-color: #45a049;
+                transform: scale(1.05);
+            }
+    
+            /* 反馈弹窗样式 */
+            .feedback-modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                justify-content: center;
+                align-items: center;
+                z-index: 1100;
+            }
+    
+            .feedback-content {
+                background: white;
+                padding: 2rem;
+                border-radius: 8px;
+                width: 90%;
+                max-width: 500px;
+                position: relative;
+            }
+    
+            .modal-header {
+                margin-bottom: 1.5rem;
+                border-bottom: 1px solid #ddd;
+                padding-bottom: 1rem;
+            }
+    
+            .modal-title {
+                font-size: 1.8rem;
+                color: #333;
+            }
+    
+            .modal-body {
+                margin-bottom: 1.5rem;
+            }
+    
+            .modal-input {
+                width: 100%;
+                padding: 12px;
+                margin: 8px 0;
+                border: 1px solid #ddd;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+    
+            .modal足按钮 {
+                background-color: #4CAF50;
+                color: white;
+                padding: 12px 24px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 16px;
+            }
+    
+            .modal足按钮:hover {
+                background-color: #45a049;
+            }
+    
+            .close-modal {
+                position: absolute;
+                top: 10px;
+                right: 15px;
+                font-size: 24px;
+                font-weight: bold;
+                color: #333;
+                cursor: pointer;
+            }
+    
+            /* 移动端适配 */
+            @media (max-width: 600px) {
+                .feedback-button {
+                    bottom: 10px;
+                    right: 10px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- 反馈按钮 -->
+        <button class="feedback-button" onclick="toggleModal()">
+            <i class="far fa-life-ring"></i>
+        </button>
+    
+        <!-- 反馈弹窗 -->
+        <div class="feedback-modal" id="feedbackModal">
+            <div class="feedback-content">
+                <div class="modal-header">
+                    <h1 class="modal-title">用户反馈</h1>
+                    <p>请截图发送邮箱后提交！<p>
+                    <span class="close-modal" onclick="toggleModal()>&times;</span>
+                </div>
+                <div class="modal-body">
+                    <form id="feedbackForm">
+                        <input type="text" class="modal-input" placeholder="请输入您的反馈内容..." required>
+                        <br>
+                        <select class="modal-input">
+                            <option value="建议">建议</option>
+                            <option value="问题">问题反馈</option>
+                            <option value="其他">其他</option>
+                        </select>
+                        <br>
+                        <button type="submit" class="modal足按钮">提交反馈</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    
+        <script>
+            function toggleModal() {
+                document.getElementById('feedbackModal').style.display = 
+                    document.getElementById('feedbackModal').style.display === 'flex' ? 'none' : 'flex';
+            }
+    
+            // 提交表单处理
+            document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                // 这里可以添加实际的表单提交逻辑
+                alert('感谢您的反馈！我们将尽快改进！');
+                toggleModal();
+                this.reset();
+            });
+    
+            // 点击遮罩层关闭弹窗
+            document.querySelector('.feedback-modal').addEventListener('click', function(e) {
+                if(e.target === e电流对象) {
+                    toggleModal();
+                }
+            });
+        </script>
+    </body>
+    </html>
     <!-- 页脚 -->
     <footer style="text-align: center; padding: 1rem; background: #333; color: white; margin-top: 2rem;">
         <p>&copy; 2025-2037 Creeper苦力怕i的个人博客. 保留所有权利。</p>
     </footer>
 </body>
 </html>
+<!-- 最新版本 -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    body { user-select: none; }
+</style>
+<script>
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('selectstart', e => e.preventDefault());
+</script>
