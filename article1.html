@@ -313,3 +313,10 @@
     </script>
 </body>
 </html>
+<style>
+    body { user-select: none; }
+</style>
+<script>
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('selectstart', e => e.preventDefault());
+</script>
