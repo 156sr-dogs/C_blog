@@ -1,10 +1,262 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html DIR="LTR">
-<head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta name="viewport" content="initial-scale=1"><title>https://www.youtube.com/watch?v=wdxLG0xyJ28</title></head>
-<body style="font-family: arial, sans-serif; background-color: #fff; color: #000; padding:20px; font-size:18px; overscroll-behavior:contain;" onload="e=document.getElementById('captcha');if(e){e.focus();} if(solveSimpleChallenge) {solveSimpleChallenge(0,0);}">
-<div style="max-width:400px;">
-<hr noshade size="1" style="color:#ccc; background-color:#ccc;"><br>
-<div style="font-size:13px;">
-我们的系统检测到您的计算机网络中存在异常流量。请稍后重新发送请求。<a href="#" onclick="document.getElementById('infoDiv').style.display='block';">为什么会这样？</a><br><br>
-<div id="infoDiv" style="display:none; background-color:#eee; padding:10px; margin:0 0 15px 0; line-height:1.4em;">
-如果 Google 自动检测到从您的计算机网络发出的请求可能违反<a href="//www.google.com/policies/terms/">服务条款</a>，就会显示此网页。这些请求一旦停止，此阻断即会失效。<br><br>该流量可能是由恶意软件、浏览器插件或发送自动请求的脚本发出的。如果您与他人共享网络连接，请向管理员寻求帮助 &mdash; 这可能是由多台计算机使用同一 IP 地址导致的。<a href="//support.google.com/websearch/answer/86640">了解详情</a><br><br>有时，如果您使用的是自动程序普遍使用的高级条款或者正在快速连续地发送请求，则可能会出现此网页。
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Cblog专属双重安全验证系统</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+            width: 420px;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            animation: slideIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .captcha-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        #captchaText {
+            background: #f8f9fa;
+            padding: 15px 25px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.4em;
+            letter-spacing: 3px;
+            border: 2px dashed #dee2e6;
+            user-select: none;
+        }
+
+        #captchaInput {
+            padding: 12px;
+            width: 140px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1.1em;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        #captchaInput:focus {
+            border-color: #4CAF50;
+            outline: none;
+        }
+
+        .slider-container {
+            background: #e9ecef;
+            height: 55px;
+            border-radius: 30px;
+            position: relative;
+            margin: 35px 0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        #slider {
+            width: 55px;
+            height: 55px;
+            background: #4CAF50;
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            cursor: grab;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        #slider:active {
+            cursor: grabbing;
+            transform: scale(1.05);
+        }
+
+        button {
+            padding: 14px 40px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76,175,80,0.3);
+        }
+
+        .status {
+            margin-top: 25px;
+            font-weight: 600;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.4s;
+        }
+
+        .status.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .success-bg {
+            background: #4CAF50 !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>安全验证</h1>
+        <div id="verificationForm">
+            <div class="captcha-container">
+                <div id="captchaText"></div>
+                <input type="text" id="captchaInput" 
+                       placeholder="输入验证码" 
+                       maxlength="4"
+                       autocomplete="off"
+                       spellcheck="false">
+            </div>
+
+            <div class="slider-container">
+                <div id="slider" draggable="false"></div>
+            </div>
+
+            <button onclick="startVerification()">验证身份</button>
+            <div id="statusText" class="status"></div>
+        </div>
+    </div>
+
+    <script>
+        // 加密目标链接（base64分段存储）
+        const encodedSegments = [
+            'aHR0cHM6Ly8xNTZzci1k',
+            'b2dzLmdpdGh1Yi5pby9D',
+            'X2Jsb2cvSG9tZS5odG1s'
+        ];
+
+        let currentCaptcha = '';
+        let isSliderValid = false;
+        let verificationAttempts = 0;
+
+        // 生成新验证码
+        function generateNewCaptcha() {
+            const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // 排除易混淆字符
+            currentCaptcha = Array.from({length: 4}, () => 
+                chars[Math.floor(Math.random() * chars.length)]
+            ).join('');
+            document.getElementById('captchaText').textContent = currentCaptcha;
+        }
+
+        // 初始化生成验证码
+        generateNewCaptcha();
+
+        // 滑块验证逻辑
+        const slider = document.getElementById('slider');
+        let isDragging = false;
+        let startX = 0;
+        let sliderLeft = 0;
+
+        slider.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            startX = e.clientX;
+            sliderLeft = slider.offsetLeft;
+            slider.style.transition = 'none';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+
+            const container = document.querySelector('.slider-container');
+            const maxLeft = container.offsetWidth - slider.offsetWidth;
+            const newLeft = Math.min(Math.max(sliderLeft + (e.clientX - startX), 0), maxLeft);
+            
+            slider.style.left = `${newLeft}px`;
+            isSliderValid = newLeft >= maxLeft * 0.98;
+            
+            slider.classList.toggle('success-bg', isSliderValid);
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+            slider.style.transition = 'all 0.3s';
+        });
+
+        // 核心验证流程
+        function startVerification() {
+            const status = document.getElementById('statusText');
+            status.classList.add('visible');
+            
+            // 验证次数统计
+            verificationAttempts++;
+
+            // 在第二次尝试时刷新验证码
+            if(verificationAttempts > 1) {
+                generateNewCaptcha();
+                isSliderValid = false;
+                slider.style.left = '0';
+                document.getElementById('captchaInput').value = '';
+                verificationAttempts = 0;
+            }
+
+            // 执行验证
+            performValidation();
+        }
+
+        function performValidation() {
+            const status = document.getElementById('statusText');
+            
+            // 验证码校验
+            const userInput = document.getElementById('captchaInput').value.toUpperCase();
+            if(userInput !== currentCaptcha.toUpperCase()) {
+                status.innerHTML = '❌ 验证码不匹配';
+                status.style.color = '#e74c3c';
+                return;
+            }
+
+            // 滑块校验
+            if(!isSliderValid) {
+                status.innerHTML = '❌ 请完成滑块验证';
+                status.style.color = '#e74c3c';
+                return;
+            }
+
+            // 验证通过处理
+            status.innerHTML = '✅ 验证成功，正在跳转...';
+            status.style.color = '#2ecc71';
+            
+            // 解码并跳转（带时间戳防缓存）
+            setTimeout(() => {
+                const decodedUrl = atob(encodedSegments.join('')) + `?t=${Date.now()}`;
+                window.location.href = decodedUrl;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>
