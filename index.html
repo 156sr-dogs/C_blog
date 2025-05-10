@@ -2,10 +2,10 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Cblog专属双重安全验证系统</title>
+    <title>Cblog人机验证系统</title>
     <style>
         body {
-            font-family: 'Segoe UI', Arial, sans-serif;
+            font-family: 'Segoe UI', 'PingFang SC', Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -15,110 +15,187 @@
         }
 
         .container {
-            background: rgba(255, 255, 255, 0.95);
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
-            width: 420px;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 2.5rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 12px 24px rgba(31, 38, 135, 0.15);
+            width: 440px;
             text-align: center;
-            backdrop-filter: blur(10px);
-            animation: slideIn 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            backdrop-filter: blur(12px);
+            transition: transform 0.3s ease;
         }
 
-        @keyframes slideIn {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
+        .container:hover {
+            transform: translateY(-4px);
         }
 
         h1 {
             color: #2c3e50;
-            margin-bottom: 30px;
+            margin-bottom: 1.8rem;
             font-weight: 600;
+            font-size: 1.8rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
         .captcha-container {
             display: flex;
             justify-content: center;
-            gap: 15px;
-            margin: 25px 0;
+            gap: 1rem;
+            margin: 2rem 0;
         }
 
         #captchaText {
-            background: #f8f9fa;
-            padding: 15px 25px;
-            border-radius: 8px;
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            padding: 1rem 2rem;
+            border-radius: 0.8rem;
             font-family: 'Courier New', monospace;
-            font-size: 1.4em;
-            letter-spacing: 3px;
-            border: 2px dashed #dee2e6;
+            font-size: 1.6rem;
+            letter-spacing: 0.2rem;
+            border: 2px solid #e9ecef;
+            box-shadow: 4px 4px 12px rgba(0,0,0,0.08);
             user-select: none;
+            color: #2c3e50;
         }
 
         #captchaInput {
-            padding: 12px;
+            padding: 0.8rem;
             width: 140px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 1.1em;
+            border: 2px solid #e0e0e0;
+            border-radius: 0.8rem;
+            font-size: 1.1rem;
             text-align: center;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            background: #f8f9fa;
         }
 
         #captchaInput:focus {
             border-color: #4CAF50;
+            box-shadow: 0 0 8px rgba(76,175,80,0.2);
             outline: none;
         }
 
-        .slider-container {
-            background: #e9ecef;
-            height: 55px;
-            border-radius: 30px;
+        .verify-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 1rem;
+            box-shadow: inset 0 2px 6px rgba(0,0,0,0.05);
+        }
+
+        .order-hint {
+            color: #666;
+            font-size: 0.95rem;
+            margin-bottom: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .order-hint i {
+            color: #4CAF50;
+            font-size: 1.2rem;
+        }
+
+        .click-verify-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.8rem;
+        }
+
+        .click-word {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            padding: 1rem;
+            border-radius: 0.8rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            border: 2px solid #e0e0e0;
+            font-weight: 500;
+            color: #444;
             position: relative;
-            margin: 35px 0;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            overflow: hidden;
+            box-shadow: 4px 4px 12px rgba(0,0,0,0.08);
         }
 
-        #slider {
-            width: 55px;
-            height: 55px;
-            background: #4CAF50;
-            border-radius: 50%;
+        .click-word::before {
+            content: '';
             position: absolute;
-            left: 0;
-            cursor: grab;
-            transition: all 0.3s;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(76,175,80,0.1);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
         }
 
-        #slider:active {
-            cursor: grabbing;
-            transform: scale(1.05);
+        .click-word:hover {
+            transform: translateY(-2px);
+            box-shadow: 6px 6px 16px rgba(0,0,0,0.1);
+        }
+
+        .click-word.selected {
+            background: linear-gradient(145deg, #4CAF50, #45a049);
+            color: white;
+            border-color: #45a049;
+            transform: scale(0.96);
+        }
+
+        .click-word.selected::after {
+            content: '✓';
+            position: absolute;
+            right: 4px;
+            top: 2px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .click-word.error {
+            animation: shake 0.4s;
+            background: linear-gradient(145deg, #ff4444, #cc0000);
+            color: white;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
         }
 
         button {
-            padding: 14px 40px;
-            background: #4CAF50;
+            padding: 0.8rem 2.5rem;
+            background: linear-gradient(145deg, #4CAF50, #45a049);
             color: white;
             border: none;
-            border-radius: 30px;
+            border-radius: 2rem;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: 500;
+            font-size: 1rem;
+            font-weight: 600;
             transition: all 0.3s;
+            letter-spacing: 0.05rem;
+            text-transform: uppercase;
+            box-shadow: 4px 4px 12px rgba(76,175,80,0.3);
         }
 
         button:hover {
-            background: #45a049;
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(76,175,80,0.3);
+            box-shadow: 6px 6px 16px rgba(76,175,80,0.4);
+        }
+
+        button:active {
+            transform: translateY(1px);
         }
 
         .status {
-            margin-top: 25px;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 0.8rem;
             font-weight: 600;
             opacity: 0;
             transform: translateY(10px);
-            transition: all 0.4s;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         .status.visible {
@@ -126,8 +203,26 @@
             transform: translateY(0);
         }
 
-        .success-bg {
-            background: #4CAF50 !important;
+        .status.success {
+            background: rgba(76,175,80,0.1);
+            color: #2ecc71;
+            border: 2px solid #4CAF50;
+        }
+
+        .status.error {
+            background: rgba(255,68,68,0.1);
+            color: #ff4444;
+            border: 2px solid #ff4444;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                width: 90%;
+                padding: 1.5rem;
+            }
+            .click-verify-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
     </style>
 </head>
@@ -140,123 +235,144 @@
                 <input type="text" id="captchaInput" 
                        placeholder="输入验证码" 
                        maxlength="4"
-                       autocomplete="off"
-                       spellcheck="false">
+                       autocomplete="off">
             </div>
 
-            <div class="slider-container">
-                <div id="slider" draggable="false"></div>
+            <div class="verify-section">
+                <div class="order-hint">
+                    <i class="fas fa-hand-pointer"></i>
+                    <span>点击顺序：</span>
+                    <span id="correctOrder"></span>
+                </div>
+                <div class="click-verify-container" id="clickContainer"></div>
             </div>
 
-            <button onclick="startVerification()">验证身份</button>
+            <button onclick="startVerification()">
+                <i class="fas fa-fingerprint"></i>
+                立即验证
+            </button>
             <div id="statusText" class="status"></div>
         </div>
     </div>
 
     <script>
-        // 加密目标链接（base64分段存储）
+        // 配置项
         const encodedSegments = [
             'aHR0cHM6Ly8xNTZzci1k',
             'b2dzLmdpdGh1Yi5pby9D',
             'X2Jsb2cvSG9tZS5odG1s'
         ];
+        const CLICK_VERIFY = {
+            words: ['天','地','玄','黄','宇','宙','洪','荒','日','月','盈','昃'],
+            requiredCount: 4,
+            correctOrder: []
+        };
 
+        // 系统状态
         let currentCaptcha = '';
-        let isSliderValid = false;
-        let verificationAttempts = 0;
+        let clickSequence = [];
+        let generatedWords = [];
 
-        // 生成新验证码
+        // 初始化系统
+        function initializeSystem() {
+            generateNewCaptcha();
+            initClickVerify();
+        }
+
+        // 生成验证码
         function generateNewCaptcha() {
-            const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; // 排除易混淆字符
+            const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
             currentCaptcha = Array.from({length: 4}, () => 
                 chars[Math.floor(Math.random() * chars.length)]
             ).join('');
             document.getElementById('captchaText').textContent = currentCaptcha;
         }
 
-        // 初始化生成验证码
-        generateNewCaptcha();
-
-        // 滑块验证逻辑
-        const slider = document.getElementById('slider');
-        let isDragging = false;
-        let startX = 0;
-        let sliderLeft = 0;
-
-        slider.addEventListener('mousedown', (e) => {
-            isDragging = true;
-            startX = e.clientX;
-            sliderLeft = slider.offsetLeft;
-            slider.style.transition = 'none';
-        });
-
-        document.addEventListener('mousemove', (e) => {
-            if (!isDragging) return;
-
-            const container = document.querySelector('.slider-container');
-            const maxLeft = container.offsetWidth - slider.offsetWidth;
-            const newLeft = Math.min(Math.max(sliderLeft + (e.clientX - startX), 0), maxLeft);
+        // 初始化点击验证
+        function initClickVerify() {
+            const container = document.getElementById('clickContainer');
+            container.innerHTML = '';
+            clickSequence = [];
             
-            slider.style.left = `${newLeft}px`;
-            isSliderValid = newLeft >= maxLeft * 0.98;
+            generatedWords = shuffleArray([...CLICK_VERIFY.words]).slice(0, CLICK_VERIFY.requiredCount);
+            CLICK_VERIFY.correctOrder = [...generatedWords].sort();
             
-            slider.classList.toggle('success-bg', isSliderValid);
-        });
+            document.getElementById('correctOrder').textContent = CLICK_VERIFY.correctOrder.join(' → ');
 
-        document.addEventListener('mouseup', () => {
-            isDragging = false;
-            slider.style.transition = 'all 0.3s';
-        });
+            generatedWords.forEach(word => {
+                const div = document.createElement('div');
+                div.className = 'click-word';
+                div.textContent = word;
+                div.onclick = () => handleWordClick(div, word);
+                container.appendChild(div);
+            });
+        }
 
-        // 核心验证流程
+        // 处理点击事件
+        function handleWordClick(element, word) {
+            if(clickSequence.includes(word)) {
+                element.classList.remove('selected');
+                clickSequence = clickSequence.filter(w => w !== word);
+            } else {
+                if(clickSequence.length >= CLICK_VERIFY.requiredCount) return;
+                element.classList.add('selected');
+                clickSequence.push(word);
+            }
+        }
+
+        // 主验证流程
         function startVerification() {
             const status = document.getElementById('statusText');
-            status.classList.add('visible');
-            
-            // 验证次数统计
-            verificationAttempts++;
+            status.className = 'status'; // 重置状态样式
 
-            // 在第二次尝试时刷新验证码
-            if(verificationAttempts > 1) {
-                generateNewCaptcha();
-                isSliderValid = false;
-                slider.style.left = '0';
-                document.getElementById('captchaInput').value = '';
-                verificationAttempts = 0;
+            const captchaValid = validateCaptcha();
+            const clickValid = validateClick();
+
+            if(captchaValid && clickValid) {
+                status.classList.add('success', 'visible');
+                status.innerHTML = '✅ 验证通过，正在跳转...';
+                redirectToTarget();
+            } else {
+                status.classList.add('error', 'visible');
+                status.innerHTML = '❌ 验证失败，请重试';
+                showErrorFeedback();
+                setTimeout(initializeSystem, 1500);
             }
-
-            // 执行验证
-            performValidation();
         }
 
-        function performValidation() {
-            const status = document.getElementById('statusText');
-            
-            // 验证码校验
-            const userInput = document.getElementById('captchaInput').value.toUpperCase();
-            if(userInput !== currentCaptcha.toUpperCase()) {
-                status.innerHTML = '❌ 验证码不匹配';
-                status.style.color = '#e74c3c';
-                return;
-            }
+        // 验证逻辑
+        function validateCaptcha() {
+            return document.getElementById('captchaInput').value.toUpperCase() === currentCaptcha.toUpperCase();
+        }
 
-            // 滑块校验
-            if(!isSliderValid) {
-                status.innerHTML = '❌ 请完成滑块验证';
-                status.style.color = '#e74c3c';
-                return;
-            }
+        function validateClick() {
+            return clickSequence.join('') === CLICK_VERIFY.correctOrder.join('');
+        }
 
-            // 验证通过处理
-            status.innerHTML = '✅ 验证成功，正在跳转...';
-            status.style.color = '#2ecc71';
-            
-            // 解码并跳转（带时间戳防缓存）
+        // 错误反馈
+        function showErrorFeedback() {
+            document.querySelectorAll('.click-word').forEach(el => {
+                if(!CLICK_VERIFY.correctOrder.includes(el.textContent)) {
+                    el.classList.add('error');
+                }
+            });
+        }
+
+        // 工具函数
+        function shuffleArray(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function redirectToTarget() {
             setTimeout(() => {
-                const decodedUrl = atob(encodedSegments.join('')) + `?t=${Date.now()}`;
-                window.location.href = decodedUrl;
+                window.location.href = atob(encodedSegments.join('')) + `?t=${Date.now()}`;
             }, 1500);
         }
+
+        // 初始化
+        initializeSystem();
     </script>
+    <!-- Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </body>
 </html>
