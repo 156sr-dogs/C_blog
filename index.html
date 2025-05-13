@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>Cblog人机验证系统</title>
+    <title>高强度安全验证系统</title>
     <style>
         body {
             font-family: 'Segoe UI', 'PingFang SC', Arial, sans-serif;
@@ -11,7 +11,7 @@
             align-items: center;
             height: 100vh;
             margin: 0;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(145deg, #f5f7fa 0%, #c3cfe2 100%);
         }
 
         .container {
@@ -25,47 +25,53 @@
             transition: transform 0.3s ease;
         }
 
-        .container:hover {
-            transform: translateY(-4px);
-        }
-
         h1 {
             color: #2c3e50;
             margin-bottom: 1.8rem;
             font-weight: 600;
             font-size: 1.8rem;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
 
+        /* 验证码容器样式 */
         .captcha-container {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
+            position: relative;
             margin: 2rem 0;
         }
 
-        #captchaText {
-            background: linear-gradient(145deg, #ffffff, #f8f9fa);
-            padding: 1rem 2rem;
+        #captchaCanvas {
+            background: linear-gradient(145deg, #f8f9fa, #ffffff);
             border-radius: 0.8rem;
-            font-family: 'Courier New', monospace;
-            font-size: 1.6rem;
-            letter-spacing: 0.2rem;
-            border: 2px solid #e9ecef;
+            border: 2px solid #e0e0e0;
             box-shadow: 4px 4px 12px rgba(0,0,0,0.08);
-            user-select: none;
-            color: #2c3e50;
+            width: 100%;
+            height: 60px;
+        }
+
+        .captcha-refresh {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .captcha-refresh:hover {
+            color: #4CAF50;
+            transform: translateY(-50%) rotate(180deg);
         }
 
         #captchaInput {
-            padding: 0.8rem;
-            width: 140px;
+            padding: 0.8rem 1rem;
+            width: 100%;
             border: 2px solid #e0e0e0;
             border-radius: 0.8rem;
-            font-size: 1.1rem;
+            font-size: 1rem;
             text-align: center;
             transition: all 0.3s;
             background: #f8f9fa;
+            margin-top: 1rem;
         }
 
         #captchaInput:focus {
@@ -74,6 +80,7 @@
             outline: none;
         }
 
+        /* 点击验证样式 */
         .verify-section {
             margin: 2rem 0;
             padding: 1.5rem;
@@ -90,11 +97,6 @@
             align-items: center;
             justify-content: center;
             gap: 0.5rem;
-        }
-
-        .order-hint i {
-            color: #4CAF50;
-            font-size: 1.2rem;
         }
 
         .click-verify-container {
@@ -116,24 +118,6 @@
             position: relative;
             overflow: hidden;
             box-shadow: 4px 4px 12px rgba(0,0,0,0.08);
-        }
-
-        .click-word::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            background: rgba(76,175,80,0.1);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s;
-        }
-
-        .click-word:hover {
-            transform: translateY(-2px);
-            box-shadow: 6px 6px 16px rgba(0,0,0,0.1);
         }
 
         .click-word.selected {
@@ -174,18 +158,9 @@
             font-size: 1rem;
             font-weight: 600;
             transition: all 0.3s;
-            letter-spacing: 0.05rem;
-            text-transform: uppercase;
             box-shadow: 4px 4px 12px rgba(76,175,80,0.3);
-        }
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 6px 6px 16px rgba(76,175,80,0.4);
-        }
-
-        button:active {
-            transform: translateY(1px);
+            width: 100%;
+            margin-top: 1rem;
         }
 
         .status {
@@ -195,7 +170,7 @@
             font-weight: 600;
             opacity: 0;
             transform: translateY(10px);
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.4s;
         }
 
         .status.visible {
@@ -230,38 +205,49 @@
     <div class="container">
         <h1>安全验证</h1>
         <div id="verificationForm">
+            <!-- 高强度验证码 -->
             <div class="captcha-container">
-                <div id="captchaText"></div>
+                <canvas id="captchaCanvas"></canvas>
+                <i class="fas fa-sync-alt captcha-refresh" onclick="generateNewCaptcha()"></i>
                 <input type="text" id="captchaInput" 
-                       placeholder="输入验证码" 
-                       maxlength="4"
+                       placeholder="输入上方验证码" 
+                       maxlength="6"
                        autocomplete="off">
             </div>
 
+            <!-- 点击验证 -->
             <div class="verify-section">
                 <div class="order-hint">
-                    <i class="fas fa-hand-pointer"></i>
-                    <span>点击顺序：</span>
+                    <span>请按顺序点击：</span>
                     <span id="correctOrder"></span>
                 </div>
                 <div class="click-verify-container" id="clickContainer"></div>
             </div>
 
-            <button onclick="startVerification()">
-                <i class="fas fa-fingerprint"></i>
-                立即验证
-            </button>
+            <button onclick="startVerification()">立即验证</button>
             <div id="statusText" class="status"></div>
         </div>
     </div>
 
     <script>
-        // 配置项
+        // 系统配置
         const encodedSegments = [
             'aHR0cHM6Ly8xNTZzci1k',
             'b2dzLmdpdGh1Yi5pby9D',
             'X2Jsb2cvSG9tZS5odG1s'
         ];
+
+        // 验证码配置
+        const CAPTCHA_CONFIG = {
+            length: 6,
+            chars: 'ABCDEFGHJKMNPQRSTUVWXYZ23456789*#@%&?',
+            fontSize: { min: 32, max: 40 },
+            rotation: { min: -30, max: 30 },
+            noiseLines: 8,
+            noiseDots: 50
+        };
+
+        // 点击验证配置
         const CLICK_VERIFY = {
             words: ['天','地','玄','黄','宇','宙','洪','荒','日','月','盈','昃'],
             requiredCount: 4,
@@ -279,13 +265,86 @@
             initClickVerify();
         }
 
-        // 生成验证码
+        // 生成高强度验证码
         function generateNewCaptcha() {
-            const chars = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
-            currentCaptcha = Array.from({length: 4}, () => 
-                chars[Math.floor(Math.random() * chars.length)]
+            const canvas = document.getElementById('captchaCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            // 设置画布尺寸
+            canvas.width = canvas.offsetWidth;
+            canvas.height = 60;
+
+            // 生成随机验证码
+            currentCaptcha = Array.from({length: CAPTCHA_CONFIG.length}, () => 
+                CAPTCHA_CONFIG.chars[Math.floor(Math.random() * CAPTCHA_CONFIG.chars.length)]
             ).join('');
-            document.getElementById('captchaText').textContent = currentCaptcha;
+
+            // 绘制背景
+            ctx.fillStyle = '#f8f9fa';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // 绘制干扰元素
+            drawNoise(ctx);
+
+            // 绘制验证码文本
+            drawText(ctx);
+
+            // 添加扭曲效果
+            ctx.globalCompositeOperation = 'multiply';
+            ctx.fillStyle = `rgba(0,0,0,0.05)`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // 绘制干扰元素
+        function drawNoise(ctx) {
+            // 干扰线
+            for(let i = 0; i < CAPTCHA_CONFIG.noiseLines; i++) {
+                ctx.beginPath();
+                ctx.moveTo(Math.random() * ctx.canvas.width, Math.random() * ctx.canvas.height);
+                ctx.lineTo(Math.random() * ctx.canvas.width, Math.random() * ctx.canvas.height);
+                ctx.strokeStyle = `rgba(0,0,0,${Math.random()*0.3})`;
+                ctx.lineWidth = Math.random() * 2;
+                ctx.stroke();
+            }
+
+            // 噪点
+            for(let i = 0; i < CAPTCHA_CONFIG.noiseDots; i++) {
+                ctx.fillStyle = `rgba(0,0,0,${Math.random()*0.3})`;
+                ctx.beginPath();
+                ctx.arc(
+                    Math.random() * ctx.canvas.width,
+                    Math.random() * ctx.canvas.height,
+                    Math.random() * 2,
+                    0,
+                    Math.PI * 2
+                );
+                ctx.fill();
+            }
+        }
+
+        // 绘制文本
+        function drawText(ctx) {
+            ctx.textBaseline = 'middle';
+            const charSpacing = ctx.canvas.width / (CAPTCHA_CONFIG.length + 1);
+
+            currentCaptcha.split('').forEach((char, index) => {
+                // 随机设置样式
+                ctx.fillStyle = `hsl(${Math.random()*360}, 70%, 30%)`;
+                ctx.font = `italic ${randomInt(CAPTCHA_CONFIG.fontSize.min, CAPTCHA_CONFIG.fontSize.max)}px Arial`;
+                
+                // 计算位置
+                const x = charSpacing * (index + 0.5) + Math.random()*10-5;
+                const y = 30 + Math.random()*10-5;
+                
+                // 旋转文字
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(randomInt(CAPTCHA_CONFIG.rotation.min, CAPTCHA_CONFIG.rotation.max) * Math.PI / 180);
+                
+                // 绘制文字
+                ctx.fillText(char, -ctx.measureText(char).width/2, 0);
+                ctx.restore();
+            });
         }
 
         // 初始化点击验证
@@ -323,14 +382,14 @@
         // 主验证流程
         function startVerification() {
             const status = document.getElementById('statusText');
-            status.className = 'status'; // 重置状态样式
+            status.className = 'status';
 
             const captchaValid = validateCaptcha();
             const clickValid = validateClick();
 
             if(captchaValid && clickValid) {
                 status.classList.add('success', 'visible');
-                status.innerHTML = '✅ 验证通过，正在跳转...';
+                status.innerHTML = '✅ 验证成功，正在跳转...';
                 redirectToTarget();
             } else {
                 status.classList.add('error', 'visible');
@@ -359,6 +418,10 @@
         }
 
         // 工具函数
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
         function shuffleArray(array) {
             return array.sort(() => Math.random() - 0.5);
         }
@@ -369,7 +432,7 @@
             }, 1500);
         }
 
-        // 初始化
+        // 初始化系统
         initializeSystem();
     </script>
     <!-- Font Awesome图标 -->
